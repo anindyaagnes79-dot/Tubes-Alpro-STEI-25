@@ -1,35 +1,46 @@
 #include "halaman_web.h"
 
-void BuatList(ListHalaman_Web *l) {
-    l->nEff = 0;
+void initList(ListWeb *l) {
+    l->jumlah = 0;
 }
 
-void BuatHalaman(Halaman_Web *h, int id, char* url, char* konten) {
-    h->id = id;
-    h->web_url = url;
-    h->content = konten;
+void buatWeb(Web *w, int id, char* url, char* isi) {
+    w->id = id;
+    w->url = url;
+    w->isi = isi;
 }
 
-void TambahHalaman(ListHalaman_Web *l, Halaman_Web h) {
-    if (l->nEff < MAX_CAPACITY) {
-        l->HW[l->nEff] = h;
-        l->nEff++;
+void tambahWeb(ListWeb *l, Web w) {
+    if (l->jumlah < MAX) {
+        l->daftar[l->jumlah] = w;
+        l->jumlah++;
     }
 }
 
-void Search(ListHalaman_Web l, char* query) {
-    int panjang_query = strlen(query);
-    bool found = false;
+void cari(ListWeb l, char* query) {
+    int i, j;
+    bool ketemu = false;
+    int len_q = 0;
+    while (query[len_q] != '\0') {
+        len_q++;
+    }
 
-    printf("Search result(s) for \"%s\":\n", query);
-    for (int i = 0; i < l.nEff; i++) {
-        // Prefix matching menggunakan strncmp
-        if (strncmp(l.HW[i].web_url, query, panjang_query) == 0) {
-            printf("- %s\n", l.HW[i].web_url);
-            found = true;
+    printf("Hasil cari '%s':\n", query);
+
+    for (i = 0; i < l.jumlah; i++) {
+        bool sama = true;
+        for (j = 0; j < len_q; j++) {
+            if (l.daftar[i].url[j] != query[j]) {
+                sama = false;
+                break; 
+            }
+        }
+        if (sama) {
+            printf("- %s\n", l.daftar[i].url);
+            ketemu = true;
         }
     }
-    if (!found) {
-        printf("Tidak Ditemukan\n");
+    if (!ketemu) {
+        printf("Gak ketemu.\n");
     }
 }

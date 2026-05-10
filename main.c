@@ -1,47 +1,39 @@
 #include "halaman_web.h"
 
 int main() {
-    ListHalaman_Web list;
-    Halaman_Web h;
-    char input[50];
+    ListWeb lw;
+    Web w;
+    char kata[50];
 
-    // 1. Inisialisasi List di RAM
-    BuatList(&list);
+    initList(&lw);
 
-    // 2. Memasukkan 5 Data Halaman Web sesuai permintaan
-    BuatHalaman(&h, 1, "google.com", "Search Engine");
-    TambahHalaman(&list, h);
+    buatWeb(&w, 1, "google.com", "Search Engine");
+    tambahWeb(&lw, w);
     
-    BuatHalaman(&h, 2, "itb.ac.id", "Official Website ITB");
-    TambahHalaman(&list, h);
+    buatWeb(&w, 2, "itb.ac.id", "Web Utama");
+    tambahWeb(&lw, w);
     
-    BuatHalaman(&h, 3, "six.itb.ac.id", "Sistem Informasi Akademik");
-    TambahHalaman(&list, h);
+    buatWeb(&w, 3, "six.itb.ac.id", "Sistem Akademik");
+    tambahWeb(&lw, w);
     
-    BuatHalaman(&h, 4, "edunex.itb.ac.id", "Learning Management System ITB");
-    TambahHalaman(&list, h);
+    buatWeb(&w, 4, "edunex.itb.ac.id", "Kuliah Online");
+    tambahWeb(&lw, w);
     
-    BuatHalaman(&h, 5, "github.com", "Platform Kolaborasi Kode");
-    TambahHalaman(&list, h);
+    buatWeb(&w, 5, "github.com", "Coding");
+    tambahWeb(&lw, w);
 
-    printf("--- ITB Browser Simulator: Ready ---\n");
-    printf("Ketik kata kunci untuk mencari atau 'EXIT' untuk keluar.\n");
+    printf("Program Cari Web Siap.\n");
+    printf("Ketik apa saja untuk cari, atau 'EXIT' untuk keluar.\n");
 
-    // 3. Loop Pencarian Langsung
     while (true) {
-        printf("\nCari URL: ");
-        
-        // Membaca input kata kunci
-        if (scanf("%49s", input) == EOF) break;
+        printf("\nCari: ");
+        if (scanf("%s", kata) == EOF) break;
 
-        // Cek apakah user ingin keluar
-        if (strcmp(input, "EXIT") == 0) {
-            printf("Program ditutup.\n");
+        if (strcmp(kata, "EXIT") == 0) {
+            printf("Selesai.\n");
             break;
         }
-
-        // Jalankan fitur F02 - Search
-        Search(list, input);
+        cari(lw, kata);
     }
 
     return 0;

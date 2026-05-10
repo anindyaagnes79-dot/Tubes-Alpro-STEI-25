@@ -5,22 +5,23 @@
 #include <stdbool.h>
 #include <string.h>
 
-#define MAX_CAPACITY 100
+#define MAX 100
 
 typedef struct {
     int id;
-    char* web_url;
-    char* content;
-} Halaman_Web;
+    char* url;
+    char* isi;
+} Web;
 
 typedef struct {
-    Halaman_Web HW[MAX_CAPACITY];
-    int nEff;
-} ListHalaman_Web;
+    Web daftar[MAX];
+    int jumlah;
+} ListWeb;
 
-void BuatList(ListHalaman_Web *l);
-void BuatHalaman(Halaman_Web *h, int id, char* url, char* konten);
-void TambahHalaman(ListHalaman_Web *l, Halaman_Web h);
-void Search(ListHalaman_Web l, char* query);
+// Daftar fungsi dasar
+void initList(ListWeb *l);
+void buatWeb(Web *w, int id, char* url, char* isi);
+void tambahWeb(ListWeb *l, Web w);
+void cari(ListWeb l, char* query);
 
 #endif

@@ -1,5 +1,3 @@
-# Makefile untuk Tubes IF1210
-
 all: main
 
 main: main.o halaman_web.o
