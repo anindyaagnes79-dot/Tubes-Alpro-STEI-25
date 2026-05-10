@@ -46,10 +46,8 @@ void Search(ListHalaman_Web l, char* query) {
 
     printf("Search result(s) for \"%s\":\n", query);
 
-    // Iterasi melalui daftar halaman yang ada
     for (int i = 0; i < l.nEff; i++) {
-        // strncmp membandingkan awal string (prefix)
-        // Jika 0, berarti URL dimulai dengan kata kunci query
+
         if (strncmp(l.HW[i].web_url, query, query_len) == 0) {
             printf("- %s\n", l.HW[i].web_url);
             found = true;
