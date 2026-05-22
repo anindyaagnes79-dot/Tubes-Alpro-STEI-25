@@ -4,14 +4,11 @@
 
 void f07_init(HistoryTab *h) {
     h->total            = 0;
-    h->posisi_sekarang  = -1; /* -1 artinya belum ada halaman sama sekali */
+    h->posisi_sekarang  = -1; 
 }
 
 void f07_tambah_url(HistoryTab *h, const char *url) {
 
-    /* Potong forward history dulu kalau posisi bukan di ujung */
-    /* Contoh: history = [a, b, c, d], posisi = 1 (b)         */
-    /* Buka e → history jadi [a, b, e], posisi = 2            */
     if (h->posisi_sekarang < h->total - 1) {
         h->total = h->posisi_sekarang + 1;
     }
@@ -46,7 +43,6 @@ static void buka_halaman_di_posisi(HistoryTab *h,
     int ditemukan = f03_open_page(url, pages, cache, adj, &ctx, &cache_hit);
 
     if (!ditemukan) {
-        /* Halaman sudah dihapus dari database */
         printf("Halaman '%s' tidak ditemukan di database (mungkin sudah dihapus).\n\n", url);
         return;
     }
