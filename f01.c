@@ -5,18 +5,6 @@
 
 #define MAX_capacity 100
 
-typedef struct {
-    int id;
-    char* web_url;
-    char* content;
-} Halaman_Web;
-
-typedef struct {
-    Halaman_Web HW[MAX_capacity];
-    int nEff;
-} ListHalaman_Web;
-
-
 void BuatHalaman_Web(Halaman_Web *h, int id, char* web_url, char* content){
     h->id=id;
     h->web_url=web_url;
