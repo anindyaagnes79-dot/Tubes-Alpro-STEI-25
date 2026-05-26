@@ -1,33 +1,7 @@
-#ifndef TABS_H
-#define TABS_H
-
-#include <stdio.h>
-#include <string.h>
-
-#define TAB_MAX_AMOUNT 10
-#define TAB_NAME_LEN 100
-#define TAB_NULL -1
-
-typedef struct
-{
-    char name[TAB_NAME_LEN];
-    int prev;
-    int next;
-    int used
-} TabNode;
-
-typedef struct
-{
-    TabNode nodes[TAB_MAX_AMOUNT];
-    int head;
-    int tail;
-    int current;
-    int size;
-    int counter;
-} TabList;
+#include "tabs.h"
 
 static int slot_find(TabList *T) {
-    for (int i=0; i<TAB_MAX_AMOUNT; i++) {
+    for (int i = 0; i < TAB_MAX_AMOUNT; i++) {
         if (!T->nodes[i].used) {
             return i;
         }
@@ -65,68 +39,69 @@ static void list_unlink(TabList *T, int idx) {
         T->tail = p;
     }
 
-    T->nodes[idx].prev = T->nodes[idx].next = TAB_NULL;
     T->size--;
 }
 
-void f06_init(TabList *T) {
-    for (int i=0; i<TAB_MAX_AMOUNT; i++) {
-        T->nodes[i].used = 0;
-        T->nodes[i].prev = T->nodes[i].next = TAB_NULL;
-        T->nodes[i].name[0] = '\0';
-    }
 
-    T->head = T->tail = T->current = TAB_NULL;
+void f06_init(TabList *T) {
+    T->head = TAB_NULL;
+    T->tail = TAB_NULL;
+    T->current = TAB_NULL;
     T->size = 0;
     T->counter = 0;
 
-    T->counter++;
-    int slot = slot_find(T);
-    snprintf(T->nodes[slot].name, TAB_NAME_LEN, "TAB%d", T->counter);
-    T->nodes[slot].used = 1;
-    list_push(T, slot);
-    T->current = slot;
+    for (int i = 0; i < TAB_MAX_AMOUNT; i++) {
+        T->nodes[i].used = 0;
+    }
+
+    f06_newtab(T);
 }
 
 int f06_newtab(TabList *T) {
     if (T->size >= TAB_MAX_AMOUNT) {
-        printf("ERROR!");
+        printf("ERROR: Jumlah tab tidak bisa melebihi batas maksimum!\n\n");
         return 0;
     }
 
-    int slot = slot_find(T);
-    T->counter++;
-    snprintf(T->nodes[slot].name, TAB_NAME_LEN, "TAB%d", T->counter);
-    T->nodes[slot].used = 1;
-    list_push(T, slot);
+    int idx = slot_find(T);
+    if (idx == TAB_NULL) return 0;
 
-    printf("Tab baru (%s) berhasil dibuat!\n\n", T->nodes[slot].name);
+    T->counter++;
+    sprintf(T->nodes[idx].name, "TAB%d", T->counter);
+    T->nodes[idx].used = 1;
+
+    list_push(T, idx);
+
+    T->current = idx;
+
+    printf("Tab baru (%s) berhasil dibuat!\n\n", T->nodes[idx].name);
     return 1;
 }
 
-int f06_closetab(TabList *T)
-{
+int f06_closetab(TabList *T) {
     if (T->size <= 1) {
-        printf("ERROR!");
+        printf("ERROR: Tidak bisa menutup tab, tab minimal berjumlah 1!\n\n");
         return 0;
     }
- 
+
     int closing = T->current;
-    int next_current = (T->nodes[closing].next != TAB_NULL)
-        ? T->nodes[closing].next : T->nodes[closing].prev;
- 
+    int next_current = T->nodes[closing].next;
+
+    if (next_current == TAB_NULL) {
+        next_current = T->nodes[closing].prev;
+    }
+
     printf("%s berhasil ditutup.\n\n", T->nodes[closing].name);
- 
+
     list_unlink(T, closing);
-    T->nodes[closing].used = 0;         /* kosongkan slot */
+    T->nodes[closing].used = 0;         
     T->nodes[closing].name[0] = '\0';
- 
+
     T->current = next_current;
     return 1;
 }
 
-void f06_checktab(const TabList *T)
-{
+void f06_checktab(const TabList *T) {
     printf("List of tab(s):\n");
     int idx = T->head;
     int pos = 1;
@@ -137,46 +112,42 @@ void f06_checktab(const TabList *T)
     printf("Current tab: %s\n\n", T->nodes[T->current].name);
 }
 
-int f06_nexttab(TabList *T, int step)
-{
+int f06_nexttab(TabList *T, int step) {
     if (step <= 0) {
-        printf("ERROR!");
+        printf("ERROR: Langkah harus positif!\n\n");
         return 0;
     }
- 
+
     int target = T->current;
     for (int i = 0; i < step; i++) {
         if (T->nodes[target].next == TAB_NULL) {
-            printf("ERROR!");
+            printf("ERROR: Langkah melebihi batas tab di sebelah kanan!\n\n");
             return 0;
         }
         target = T->nodes[target].next;
     }
- 
+
     T->current = target;
     printf("Tab saat ini berhasil diganti ke %s.\n\n", T->nodes[T->current].name);
     return 1;
 }
 
-int f06_prevtab(TabList *T, int step)
-{
+int f06_prevtab(TabList *T, int step) {
     if (step <= 0) {
-        printf("ERROR!");
+        printf("ERROR: Langkah harus positif!\n\n");
         return 0;
     }
- 
+
     int target = T->current;
     for (int i = 0; i < step; i++) {
         if (T->nodes[target].prev == TAB_NULL) {
-            printf("ERROR!");
+            printf("ERROR: Langkah melebihi batas tab di sebelah kiri!\n\n");
             return 0;
         }
         target = T->nodes[target].prev;
     }
- 
+
     T->current = target;
     printf("Tab saat ini berhasil diganti ke %s.\n\n", T->nodes[T->current].name);
     return 1;
 }
-
-#endif 
