@@ -6,9 +6,6 @@
 #define MAX_URL_LEN 256
 #define MAX_CONTENT_LEN 1024
 
-/* ------------------------------------------------------------- */
-/* DEFINISI STRUKTUR ADT SET ASLI KELOMPOKMU                     */
-/* ------------------------------------------------------------- */
 typedef struct {
     int id;
     char web_url[MAX_URL_LEN];
@@ -32,7 +29,6 @@ typedef struct {
     int capacity;
 } LinkedPageSet;
 
-/* Deklarasi Fungsi Utama Navigasi Halaman */
 void open_page(ListHalaman_Web *l, char* url);
 
 #endif
