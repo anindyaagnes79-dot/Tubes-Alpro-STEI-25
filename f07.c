@@ -20,8 +20,8 @@ void Push(StackHistory *S, const char *url) {
         strncpy(S->data[S->top], url, MAX_URL_LEN - 1);
         S->data[S->top][MAX_URL_LEN - 1] = '\0';
     } else {
-
-        for (int i = 0; i < MAX_HISTORY - 1; i++) {
+		int i;
+        for (i = 0; i < MAX_HISTORY - 1; i++) {
             strcpy(S->data[i], S->data[i + 1]);
         }
         strncpy(S->data[S->top], url, MAX_URL_LEN - 1);
