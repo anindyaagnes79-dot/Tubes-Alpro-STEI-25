@@ -54,8 +54,9 @@ int f08_back_x(HistoryTab *h, int x) {
     }
 
     char temp_url[MAX_URL_LEN];
-
-    for (int i = 0; i < x; i++) {
+	
+	int i;
+    for (i = 0; i < x; i++) {
         Pop(&h->backStack, temp_url);
         Push(&h->forwardStack, temp_url);
     }
@@ -76,8 +77,9 @@ int f08_forward_x(HistoryTab *h, int x) {
     }
 
     char temp_url[MAX_URL_LEN];
-
-    for (int i = 0; i < x; i++) {
+	
+	int i;
+    for (i = 0; i < x; i++) {
         Pop(&h->forwardStack, temp_url);
         Push(&h->backStack, temp_url);
     }
