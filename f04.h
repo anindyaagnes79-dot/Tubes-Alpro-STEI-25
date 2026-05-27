@@ -101,7 +101,6 @@ static void cache_put (LRUCache *C, const WebPage *page) {
         return;
     }
  
-    /* Evict LRU (tail) jika penuh */
     if (C->size >= C->capacity) {
         int lru = C->tail;
         node_detach(C, lru);
