@@ -1,10 +1,7 @@
 #include "f10.h"
 #include <stdio.h>
 #include <string.h>
-
-// Menghidupkan antrean download secara terisolasi di dalam f10.c
-static DownloadQueue qSistem = {{{""}, 0}, 0, -1, 0};
-static int sudahInisialisasi = 0;
+#include <stdlib.h>
 
 void InitDownloadManager(DownloadQueue *q) {
     q->head = 0;
@@ -19,10 +16,14 @@ void TambahDownload(DownloadQueue *q, char *urlTarget) {
     }
 
     q->tail = (q->tail + 1) % DOWNLOAD_MAX_AMOUNT;
+    
     strncpy(q->buffer[q->tail].url, urlTarget, MAX_URL_LEN - 1);
     q->buffer[q->tail].url[MAX_URL_LEN - 1] = '\0';
 
-    int panjangUrl = strlen(urlTarget);
+    int panjangUrl = 0;
+    while (urlTarget[panjangUrl] != '\0') {
+        panjangUrl++;
+    }
     int nTicks = (panjangUrl / 5) + 2;
     q->buffer[q->tail].ticks_sisa = nTicks;
 
@@ -41,24 +42,20 @@ static void EksekusiSimpanFile(char *urlAsli, ListHalaman_Web *database) {
     strncpy(namaFile, urlAsli, MAX_URL_LEN - 1);
     namaFile[MAX_URL_LEN - 1] = '\0';
 
-    // Potong postfix domain (.com, .id, dll) sesuai spesifikasi khusus D02
     char *titik = strrchr(namaFile, '.');
     if (titik != NULL) {
         *titik = '\0'; 
     }
-    strcat(namaFile, ".txt");
+    strcat(namaFile, ".txt"); 
 
-    // Ambil konten halaman dari database
-    char *kontenWeb = "Data konten web kosong.";
+    const char *kontenWeb = "Data konten web kosong.";
     int i;
     for (i = 0; i < database->nEff; i++) {
         if (strcmp(database->HW[i].web_url, urlAsli) == 0) {
             kontenWeb = database->HW[i].content;
-            break;
         }
     }
 
-    // Buat file fisik .txt nyata di folder lokal
     FILE *fileLokal = fopen(namaFile, "w");
     if (fileLokal != NULL) {
         fprintf(fileLokal, "%s", kontenWeb);
@@ -94,22 +91,4 @@ void JalankanTick(DownloadQueue *q, ListHalaman_Web *database) {
             printf("\n");
         }
     }
-}
-
-int EvaluasiPerintahDownload(char *perintahUtama, char *argumenTambahan, ListHalaman_Web *database) {
-    if (!sudahInisialisasi) {
-        InitDownloadManager(&qSistem);
-        sudahInisialisasi = 1;
-    }
-
-    if (strcmp(perintahUtama, "download") == 0) {
-        TambahDownload(&qSistem, argumenTambahan);
-        return 1;
-    }
-    else if (strcmp(perintahUtama, "tick") == 0) {
-        JalankanTick(&qSistem, database);
-        return 1;
-    }
-
-    return 0; // Bukan perintah milik F10
 }
